@@ -1,0 +1,63 @@
+#include <iostream>
+#include <climits>
+
+using namespace std;
+
+void merge(int *a,int left,int right,int mid){
+    int left_len,right_len,*R,*L,pointer1,pointer2;
+    
+    left_len=mid-left+1;
+    right_len=right-mid;
+    
+    R=(int*)malloc(sizeof(int)*(right_len));
+    L=(int*)malloc(sizeof(int)*(left_len));
+    for(int i=0;i<left_len;i++){
+        L[i]=a[left+i];
+    }
+    for(int i=0;i<right_len;i++){
+        R[i]=a[mid+1+i];
+    }
+    
+    pointer1=0;
+    pointer2=0;
+    L[left_len]=INT_MAX;
+    R[right_len]=INT_MAX;
+    for(int i=0;i<left_len+right_len;i++){
+/*********************************************
+        if(pointer1==left_len){
+            a[left+i]=R[pointer2++];
+            continue;
+        }else if(pointer2==right_len){
+            a[left+i]=L[pointer1++];
+            continue;
+        }
+*********************************************/
+        if(R[pointer2]<=L[pointer1]){
+            a[left+i]=R[pointer2++];
+        }else{
+            a[left+i]=L[pointer1++];
+        }
+    }
+    free(R);
+    free(L);
+}
+
+void mergesort(int *a,int left,int right){
+    if(left<right){
+        int mid;
+        mid=(left+right)/2;
+        mergesort(a,left,mid);
+        mergesort(a,mid+1,right);
+        merge(a,left,right,mid);
+    }
+}
+
+int main()
+{
+    int a[10]={4,9,36,25,10,5,3,0,18,2};
+    mergesort(a,0,9);
+    for(int i=0;i<10;i++){
+        printf("%d\t",a[i]);
+    }
+    return 0;
+}
